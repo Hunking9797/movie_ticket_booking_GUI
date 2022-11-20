@@ -4,36 +4,43 @@ import mysql.connector as mysql
 
 
 def book():
-    curr_ticket_booked = int(number_of_ticket_entry.get())
-    if(customer_name_entry.get() == "" or customer_id_entry.get() == "" or customer_age_entry.get() == "" or movie_select_entry.get() == ""):
-            messagebox.showinfo(title='Error',message='Attributes cannot be NULL', icon='error')
-    else:
-        con = mysql.connect(host='localhost', user='root', password='arunnaveen', database='movie')
-        cursor = con.cursor()
-        cursor.execute("select ticket_available from movie where mov_id = ('"+movie_select_entry.get()+"')")
-        rows = cursor.fetchall()
-        temp = str(rows[0])
-        ticket_available = int(temp[1:4])
-        value =  str(ticket_available - curr_ticket_booked)
-        cursor.execute("update movie set ticket_available= '"+ value +"' where mov_id = '"+ movie_select_entry.get()+"'")
-        cursor.execute("commit")
+    try:
+        curr_ticket_booked = int(number_of_ticket_entry.get())
+        if(customer_name_entry.get() == "" or customer_id_entry.get() == "" or customer_age_entry.get() == "" or movie_select_entry.get() == ""):
+                messagebox.showinfo(title='Error',message='Attributes cannot be NULL', icon='error')
+        else:
+            con = mysql.connect(host='localhost', user='root', password='arunnaveen', database='movie')
+            cursor = con.cursor()
+            cursor.execute("select ticket_available from movie where mov_id = ('"+movie_select_entry.get()+"')")
+            rows = cursor.fetchall()
+            temp = str(rows[0])
+            ticket_available = int(temp[1:4])
+            value =  str(ticket_available - curr_ticket_booked)
+            cursor.execute("update movie set ticket_available= '"+ value +"' where mov_id = '"+ movie_select_entry.get()+"'")
+            cursor.execute("commit")
 
-        customer_name_entry.delete(0,END)
-        customer_id_entry.delete(0,END)
-        customer_age_entry.delete(0,END)
-        movie_select_entry.delete(0,END)
-        number_of_ticket_entry.delete(0,END)
+            customer_name_entry.delete(0,END)
+            customer_id_entry.delete(0,END)
+            customer_age_entry.delete(0,END)
+            movie_select_entry.delete(0,END)
+            number_of_ticket_entry.delete(0,END)
 
-        # self.show(table_content)
-        cursor.execute("select * from movie")
-        rows = cursor.fetchall()
-        table_content.delete(0, table_content.size())
-        for row in rows: 
-            insertData = "               " + str(row[0]) + "                        " + str(row[1]) + "                        " + str(row[2]) + "            " + str(row[3])
-            table_content.insert(table_content.size()+1, insertData)
+            # self.show(table_content)
+            cursor.execute("select * from movie")
+            rows = cursor.fetchall()
+            table_content.delete(0, table_content.size())
+            for row in rows: 
+                # insertData = "               " + str(row[0]) + "                        " + str(row[1]) + "                        " + str(row[2]) + "            " + str(row[3])
+                insertData = f"{str(row[0]):>15}{str(row[1]):>24}{str(row[2]):>25}{str(row[3]):>30}"
+                table_content.insert(table_content.size()+1, insertData)
 
-        messagebox.showinfo(title='Info', message='Booked Successfully!')
-        con.close()
+            messagebox.showinfo(title='Info', message='Booked Successfully!')
+            con.close()
+    except ValueError as ve:
+        error = Label(window,text='Invalid input',font=('System',15), fg="white", bg='grey')
+        error.place(x=200,y=400)
+        print('Values should be appropriate',ve)
+        error.grid_remove()
 
 window = Tk()
 window.title("Movie Ticket Booking")
@@ -70,7 +77,8 @@ cursor.execute("select * from movie")
 rows = cursor.fetchall()
 table_content.delete(0, table_content.size())
 for row in rows: 
-    insertData = "               " + str(row[0]) + "                        " + str(row[1]) + "                        " + str(row[2]) + "            " + str(row[3])
+    insertData = f"{str(row[0]):>15}{str(row[1]):>24}{str(row[2]):>25}{str(row[3]):>30}"
+    # insertData = "               " + str(row[0]) + "                        " + str(row[1]) + "                        " + str(row[2]) + "            " + str(row[3])
     table_content.insert(table_content.size()+1, insertData)
 
 customer_name = Label(window,text='Customer Name',font=('system',12),fg='white',bg='grey')
