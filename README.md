@@ -22,4 +22,3 @@ This project demonstrates movie ticket booking operations with dynamically chang
 
 ### 4. Available tickets changed
 <img src="https://github.com/Hunking9797/movie_ticket_booking_GUI/blob/main/Screenshots/Available%20Tickets%20Changed.png" width=300 height=350 />
-
